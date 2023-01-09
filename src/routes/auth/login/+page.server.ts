@@ -4,14 +4,14 @@ import * as jose from 'jose';
 
 export const actions: Actions = {
 	default: async (event) => {
-		let data = await event.request.formData();
-		let username = data.get('username');
-		let password = data.get('password');
+		const data = await event.request.formData();
+		const username = data.get('username');
+		const password = data.get('password');
 
-		let prisma = new PrismaClient();
+		const prisma = new PrismaClient();
 
 		try {
-			let user = await prisma.user.findUniqueOrThrow({
+			const user = await prisma.user.findUniqueOrThrow({
 				where: {
 					username: username
 				}
@@ -19,8 +19,8 @@ export const actions: Actions = {
 
 			if (user.password === password) {
 				try {
-					let key = new TextEncoder().encode(process.env["KEY"])
-					let jwt = await new jose.SignJWT({ aud: username })
+					const key = new TextEncoder().encode(process.env['KEY']);
+					const jwt = await new jose.SignJWT({ aud: username })
 						.setProtectedHeader({ alg: 'HS256' })
 						.setExpirationTime('2d')
 						.setIssuedAt()
