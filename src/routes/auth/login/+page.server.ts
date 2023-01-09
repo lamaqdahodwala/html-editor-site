@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Actions, redirect } from '@sveltejs/kit';
+import { type Actions, redirect } from '@sveltejs/kit';
 import * as jose from 'jose';
 
 export const actions: Actions = {
@@ -26,7 +26,7 @@ export const actions: Actions = {
 						.setIssuedAt()
 						.sign(key);
 
-					event.cookies.set('jwt', jwt);
+					event.cookies.set('jwt', jwt, {path: "/"});
 				} catch (error) {
 					return {
 						success: false,
