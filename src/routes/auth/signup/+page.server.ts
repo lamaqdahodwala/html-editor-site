@@ -6,6 +6,19 @@ export const actions: Actions = {
         let username = data.get("username")
         let password = data.get('password')
 
+        if (username === undefined){
+            return {
+                success: false, 
+                error: "Provide a username"
+            }
+        }
+
+        if (password === undefined){
+            return {
+                success: false, 
+                error: "Provide a password"
+            }
+        }
         let prisma = new PrismaClient()
 
         let user = await prisma.user.create({
@@ -15,6 +28,7 @@ export const actions: Actions = {
             }
         })
 
-        return redirect(302, "/auth/login")
+        prisma.$disconnect()
+        throw redirect(302, "/auth/login")
     }    
 };

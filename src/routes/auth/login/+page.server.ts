@@ -1,6 +1,7 @@
-import { PrismaClient } from '.prisma/client';
-import { Actions } from '@sveltejs/kit';
-import * as jose from 'jose'
+import { PrismaClient } from '@prisma/client';
+import { Actions, redirect } from '@sveltejs/kit';
+import * as jose from 'jose';
+
 export const actions: Actions = {
 	default: async (event) => {
 		let data = await event.request.formData();
@@ -16,16 +17,28 @@ export const actions: Actions = {
 				}
 			});
 
-            if (user.password === password){
-                let jwt = await jose.SignJWT({
-                    
-                })
-            } else {
-                return {
-                    success: false, 
-                    error: "The password is incorrect"
-                }
-            }
+			if (user.password === password) {
+				try {
+					let key = new TextEncoder().encode(process.env["KEY"])
+					let jwt = await new jose.SignJWT({ aud: username })
+						.setProtectedHeader({ alg: 'HS256' })
+						.setExpirationTime('2d')
+						.setIssuedAt()
+						.sign(key);
+
+					event.cookies.set('jwt', jwt);
+				} catch (error) {
+					return {
+						success: false,
+						error: 'other error'
+					};
+				}
+			} else {
+				return {
+					success: false,
+					error: 'The password is incorrect'
+				};
+			}
 		} catch (error) {
 			return {
 				success: false,
@@ -33,10 +46,8 @@ export const actions: Actions = {
 			};
 		}
 
-        prisma.$disconnect()
+		throw redirect(303, '/');
 
-        
-
-
+		prisma.$disconnect();
 	}
 };

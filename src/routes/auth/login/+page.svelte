@@ -1,3 +1,7 @@
+<script lang="ts">
+    export let form: FormData
+</script>
+
 <form method="post">
     <label for="username">
         <p>Username</p>
@@ -11,3 +15,7 @@
 
     <button type="submit">Log in</button>
 </form>
+
+{#if form?.success === false}
+    <p>Error: {form.error}</p>
+{/if}
