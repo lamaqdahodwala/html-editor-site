@@ -19,9 +19,10 @@ model User {
 
 model Pen {
   id      Int  @id @default(autoincrement())
+  title String 
   owner   User @relation(fields: [ownerId], references: [id])
   ownerId Int
-  html String 
-  css String 
-  js String
+  html String @default("")
+  css String @default("")
+  js String @default("")
 }
