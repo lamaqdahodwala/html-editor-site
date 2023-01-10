@@ -3,10 +3,10 @@ import { redirect, type Actions } from '@sveltejs/kit';
 import * as jose from 'jose';
 export const actions: Actions = {
 	default: async (event) => {
-		let data = event.request.formData();
-		let title = String((await data).get('title'));
-		let jwt = event.cookies.get('jwt');
-		let key = new TextEncoder().encode(process.env['KEY']);
+		const data = event.request.formData();
+		const title = String((await data).get('title'));
+		const jwt = event.cookies.get('jwt');
+		const key = new TextEncoder().encode(process.env['KEY']);
 
 		if (jwt === undefined) {
 			throw redirect(303, '/auth/login');
@@ -28,8 +28,8 @@ export const actions: Actions = {
 		try {
 
 			// Find out if the user has a pen that already has this title
-			let prisma = new PrismaClient();
-			let userdata = await prisma.user.findUniqueOrThrow({
+			const prisma = new PrismaClient();
+			const userdata = await prisma.user.findUniqueOrThrow({
 				where: {
 					username: user.payload.aud
 				},
@@ -43,7 +43,7 @@ export const actions: Actions = {
 				}
 			});
 
-			let post_titles = userdata.pens.map((val) => {
+			const post_titles = userdata.pens.map((val) => {
 				return val.title;
 			});
 
@@ -56,7 +56,7 @@ export const actions: Actions = {
 				};
 			}
 
-			let pen = await prisma.pen.create({
+			const pen = await prisma.pen.create({
 				data: {
 					title: title,
 					owner: {
