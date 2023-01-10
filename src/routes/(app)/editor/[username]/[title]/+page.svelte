@@ -74,6 +74,3 @@
     </div>
 </div>
 
-<p>{html}</p>
-<p>{css}</p>
-<p>{js}</p>
