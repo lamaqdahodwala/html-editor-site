@@ -18,6 +18,8 @@
         js = data.js
     })
 
+    console.log(data.is_owner)
+
 
     function save(html: string, css: string, js: string){
         let req = fetch(`/editor/${data.username}/${data.title}`, {
@@ -66,9 +68,9 @@
 </script>
 
 <div class="grid grid-cols-3 gap-3">
-	<textarea use:debounce={html_config} bind:value={html} name="" id="" cols="30" rows="10" class="border-2 border-black" />
-	<textarea use:debounce={js_config} bind:value={js} name="" id="" cols="30" rows="10" class="border-2 border-black" />
-	<textarea use:debounce={css_config} bind:value={css} name="" id="" cols="30" rows="10" class="border-2 border-black" />
+	<textarea disabled={!(data.is_owner)} use:debounce={html_config} bind:value={html} name="" id="" cols="30" rows="10" class="border-2 border-black" />
+	<textarea disabled={!(data.is_owner)} use:debounce={js_config} bind:value={js} name="" id="" cols="30" rows="10" class="border-2 border-black" />
+	<textarea disabled={!(data.is_owner)} use:debounce={css_config} bind:value={css} name="" id="" cols="30" rows="10" class="border-2 border-black" />
 	<div class="col-span-3">
         <iframe bind:this={iframe} src="/editor/{data.username}/{data.title}/view" title="Live View" frameborder="0" class="border-2 w-full h-full" />
     </div>

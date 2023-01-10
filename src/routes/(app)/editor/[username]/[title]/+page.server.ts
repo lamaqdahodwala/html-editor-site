@@ -1,10 +1,26 @@
 import { PrismaClient } from '@prisma/client';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import * as jose from 'jose'
 
 export const load: PageServerLoad = async (event) => {
 	const prisma = new PrismaClient();
+
+	
 	try {
+		let jwt =  event.cookies.get("jwt")
+		let user: string | null
+		if (jwt === undefined){
+			user = null
+		}
+
+		try {
+			let decoded = await jose.jwtVerify(jwt, new TextEncoder().encode(process.env["KEY"]))
+			user = decoded.payload.aud
+		} catch (error) {
+			user = null
+		}
+		
 		const pen_data = await prisma.user.findUnique({
 			where: {
 				username: event.params.username
@@ -13,6 +29,13 @@ export const load: PageServerLoad = async (event) => {
 				pens: {
 					where: {
 						title: event.params.title
+					},
+					include: {
+						owner: {
+							select: {
+								username: true
+							}
+						}
 					}
 				}
 			}
@@ -25,12 +48,14 @@ export const load: PageServerLoad = async (event) => {
 
         let pen = pen_data.pens[0]
 
+		
         return {
             username: event.params.username,
             title: event.params.title,
             html: pen.html,
             css: pen.css, 
-            js: pen.js
+            js: pen.js,
+			is_owner: user === pen.owner.username? true : false
         }
 
         
