@@ -26,7 +26,6 @@ export const actions: Actions = {
 		}
 
 		try {
-			console.log(user);
 
 			// Find out if the user has a pen that already has this title
 			let prisma = new PrismaClient();
@@ -45,8 +44,10 @@ export const actions: Actions = {
 			});
 
 			let post_titles = userdata.pens.map((val) => {
-				val.title;
+				return val.title;
 			});
+
+            console.log(post_titles)
 
 			if (post_titles.includes(title)) {
 				return {
