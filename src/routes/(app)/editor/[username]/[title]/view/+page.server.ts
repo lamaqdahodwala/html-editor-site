@@ -1,35 +1,35 @@
-import { PrismaClient } from "@prisma/client";
-import { redirect } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
+import { PrismaClient } from '@prisma/client';
+import { redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-    let prisma = new PrismaClient()
+	const prisma = new PrismaClient();
 
-    let pen_user = await prisma.user.findUnique({
-        where: {
-            username: event.params.username
-        },
-        include: {
-            pens: {
-                where: {
-                    title: event.params.title
-                }
-            }
-        }
-    })
+	const pen_user = await prisma.user.findUnique({
+		where: {
+			username: event.params.username
+		},
+		include: {
+			pens: {
+				where: {
+					title: event.params.title
+				}
+			}
+		}
+	});
 
-    console.log(pen_user)
+	console.log(pen_user);
 
-    if (pen_user?.pens.length !== 1){
-        throw redirect(302, "/")
-    }
-    let pen = pen_user?.pens[0]
+	if (pen_user?.pens.length !== 1) {
+		throw redirect(302, '/');
+	}
+	const pen = pen_user?.pens[0];
 
-    let string = `<html>${pen.html} <script>${pen.js}</script> <style>${pen.css}</style> </html>`
-    return {
-        html: pen.html,
-        css: pen.css, 
-        js: pen.js,
-        string: string
-    }
+	const string = `<html>${pen.html} <script>${pen.js}</script> <style>${pen.css}</style> </html>`;
+	return {
+		html: pen.html,
+		css: pen.css,
+		js: pen.js,
+		string: string
+	};
 };

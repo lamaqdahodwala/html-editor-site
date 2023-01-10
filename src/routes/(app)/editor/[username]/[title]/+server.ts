@@ -2,73 +2,68 @@ import { PrismaClient } from '@prisma/client';
 import { json, type RequestHandler } from '@sveltejs/kit';
 import * as jose from 'jose';
 export const POST: RequestHandler = async (event) => {
-	let jwt = event.cookies.get('jwt');
+	const jwt = event.cookies.get('jwt');
 
 	try {
-		let decoded = await jose.jwtVerify(jwt, new TextEncoder().encode(process.env['KEY']));
+		const decoded = await jose.jwtVerify(jwt, new TextEncoder().encode(process.env['KEY']));
 
-        if (decoded.payload.aud !== event.params.username){
-            return json({
-                success: false, 
-                error: "Not authorized"
-            })
-        }
+		if (decoded.payload.aud !== event.params.username) {
+			return json({
+				success: false,
+				error: 'Not authorized'
+			});
+		}
 
-        let prisma = new PrismaClient()
+		const prisma = new PrismaClient();
 
-        let user_pen = await prisma.user.findUnique({
-            where: {
-                
-                username: event.params.username, 
-            },
-            include: {
-                pens: {
-                    where: {
-                        title: event.params.title
-                    }
-                }
-            }
-        })
+		const user_pen = await prisma.user.findUnique({
+			where: {
+				username: event.params.username
+			},
+			include: {
+				pens: {
+					where: {
+						title: event.params.title
+					}
+				}
+			}
+		});
 
-        if (user_pen?.pens.length !== 1){
-            return json({
-                sucess: false, 
-                error: "The pen doesn't exist"
-            })
-        }
-        let pen = user_pen?.pens[0]
+		if (user_pen?.pens.length !== 1) {
+			return json({
+				sucess: false,
+				error: "The pen doesn't exist"
+			});
+		}
+		const pen = user_pen?.pens[0];
 
-        let data = await event.request.json()
+		const data = await event.request.json();
 
-        let html  = data["html"]
-        let css = data["css"]
-        let js = data["js"]
+		const html = data['html'];
+		const css = data['css'];
+		const js = data['js'];
 
-        let new_pen  = await prisma.pen.update({
-            where: {
-                id: pen.id
-            },
-            data: {
-                html: html, 
-                css: css, 
-                js: js
-            }
-        })
+		const new_pen = await prisma.pen.update({
+			where: {
+				id: pen.id
+			},
+			data: {
+				html: html,
+				css: css,
+				js: js
+			}
+		});
 
-        return json({
-            success: true, 
-            error: null
-        })
-
-
-        
-        
+		return json({
+			success: true,
+			error: null
+		});
 	} catch (error) {
-        return json({
-            success: false, 
-            error: "Not logged in"
-        })
-    }
+		return json({
+			success: false,
+			error: 'Not logged in'
+		});
+	}
 
 	return new Response();
 };

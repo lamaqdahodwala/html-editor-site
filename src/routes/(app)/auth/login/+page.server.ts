@@ -26,7 +26,7 @@ export const actions: Actions = {
 						.setIssuedAt()
 						.sign(key);
 
-					event.cookies.set('jwt', jwt, {path: "/"});
+					event.cookies.set('jwt', jwt, { path: '/' });
 				} catch (error) {
 					return {
 						success: false,

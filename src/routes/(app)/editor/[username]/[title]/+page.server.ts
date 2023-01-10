@@ -1,26 +1,25 @@
 import { PrismaClient } from '@prisma/client';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import * as jose from 'jose'
+import * as jose from 'jose';
 
 export const load: PageServerLoad = async (event) => {
 	const prisma = new PrismaClient();
 
-	
 	try {
-		let jwt =  event.cookies.get("jwt")
-		let user: string | null
-		if (jwt === undefined){
-			user = null
+		const jwt = event.cookies.get('jwt');
+		let user: string | null;
+		if (jwt === undefined) {
+			user = null;
 		}
 
 		try {
-			let decoded = await jose.jwtVerify(jwt, new TextEncoder().encode(process.env["KEY"]))
-			user = decoded.payload.aud
+			const decoded = await jose.jwtVerify(jwt, new TextEncoder().encode(process.env['KEY']));
+			user = decoded.payload.aud;
 		} catch (error) {
-			user = null
+			user = null;
 		}
-		
+
 		const pen_data = await prisma.user.findUnique({
 			where: {
 				username: event.params.username
@@ -41,24 +40,21 @@ export const load: PageServerLoad = async (event) => {
 			}
 		});
 
-        console.log(pen_data)
-        if (pen_data?.pens.length !== 1){
-            throw error(404, "Not found")
-        }
+		console.log(pen_data);
+		if (pen_data?.pens.length !== 1) {
+			throw error(404, 'Not found');
+		}
 
-        let pen = pen_data.pens[0]
+		const pen = pen_data.pens[0];
 
-		
-        return {
-            username: event.params.username,
-            title: event.params.title,
-            html: pen.html,
-            css: pen.css, 
-            js: pen.js,
-			is_owner: user === pen.owner.username? true : false
-        }
-
-        
+		return {
+			username: event.params.username,
+			title: event.params.title,
+			html: pen.html,
+			css: pen.css,
+			js: pen.js,
+			is_owner: user === pen.owner.username ? true : false
+		};
 	} catch (e) {
 		throw error(404, 'Not found');
 	}

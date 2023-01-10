@@ -18,7 +18,7 @@ export const actions: Actions = {
 				error: 'Provide a title'
 			};
 		}
-        let user
+		let user;
 		try {
 			user = await jose.jwtVerify(jwt, key);
 		} catch (error) {
@@ -26,7 +26,6 @@ export const actions: Actions = {
 		}
 
 		try {
-
 			// Find out if the user has a pen that already has this title
 			const prisma = new PrismaClient();
 			const userdata = await prisma.user.findUniqueOrThrow({
@@ -47,7 +46,7 @@ export const actions: Actions = {
 				return val.title;
 			});
 
-            console.log(post_titles)
+			console.log(post_titles);
 
 			if (post_titles.includes(title)) {
 				return {
