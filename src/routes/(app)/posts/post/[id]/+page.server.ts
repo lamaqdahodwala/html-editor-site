@@ -6,7 +6,7 @@ export const load: PageServerLoad = async (event) => {
 
     let prisma = new PrismaClient()
 
-    prisma.post.findUniqueOrThrow({
+    let post = prisma.post.findUniqueOrThrow({
         where: {
             id: Number(id)
         }, 
@@ -29,4 +29,8 @@ export const load: PageServerLoad = async (event) => {
             }
         }
     })
+
+    return {
+        post: post
+    }
 };

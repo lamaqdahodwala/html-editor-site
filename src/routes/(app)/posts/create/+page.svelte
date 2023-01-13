@@ -2,6 +2,7 @@
 	import type { PageData } from "./$types";
 
     export let data: PageData
+    export let form: FormData
 </script>
 
 <form method="post">
@@ -28,3 +29,8 @@
 
     <button type="submit">Create post</button>
 </form>
+
+{#if form?.success === false} 
+
+    <p>Error: {form.error}</p>
+{/if}
