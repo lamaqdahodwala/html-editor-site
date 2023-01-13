@@ -47,13 +47,16 @@ export const load: PageServerLoad = async (event) => {
 
 		const pen = pen_data.pens[0];
 
+		let here = event.url
+		
 		return {
 			username: event.params.username,
 			title: event.params.title,
 			html: pen.html,
 			css: pen.css,
 			js: pen.js,
-			is_owner: user === pen.owner.username ? true : false
+			is_owner: user === pen.owner.username ? true : false,
+			here: here.href
 		};
 	} catch (e) {
 		throw error(404, 'Not found');

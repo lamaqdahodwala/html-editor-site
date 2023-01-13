@@ -104,3 +104,4 @@
 		/>
 	</div>
 </div>
+<a href="{data.here + '/view'}">Open in browser</a>
