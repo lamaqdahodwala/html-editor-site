@@ -12,12 +12,11 @@ export const actions: Actions = {
 
 			const data = await event.request.formData();
 
-			console.log(data.get("pen_title"))
+			console.log(data.get('pen_title'));
 
-			const title = data.get("title");
+			const title = data.get('title');
 			const content = data.get('content');
 			const pen_title = data.get('pen_title');
-
 
 			const user = await prisma.user.findUnique({
 				where: {
@@ -39,80 +38,81 @@ export const actions: Actions = {
 				}
 			});
 
-
 			if (user.pens.length !== 1) {
 				throw error(500, 'Error');
 			}
 
 			const pen = user.pens[0];
 
-
-
 			if (decoded.payload.aud !== pen.owner.username) {
 				throw error(403, 'Not authorized');
 			}
 
-			const post = await prisma.post.create({
-				data: {
-					title: title,
-					content: content,
-					pen: {
-						connect: {
-							id: pen.id
-						}
-					},
-					owner: {
-						connect: {
-							username: decoded.payload.aud
+			try {
+				const post = await prisma.post.create({
+					data: {
+						title: title,
+						content: content,
+						pen: {
+							connect: {
+								id: pen.id
+							}
+						},
+						owner: {
+							connect: {
+								username: decoded.payload.aud
+							}
 						}
 					}
-				}
-			});
+				});
+			} catch (error) {
+				return {
+					success: false,
+					error: 'A post with this name already exists'
+				};
+			}
 
 			return {
 				success: true,
 				error: null
 			};
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 			throw redirect(302, '/auth/login');
 		}
 	}
 };
 export const load: PageServerLoad = async (event) => {
 	const jwt = event.cookies.get('jwt');
-	if (jwt === undefined){
-		console.log("redirect here")
-		throw redirect(302, "/auth/login")
+	if (jwt === undefined) {
+		console.log('redirect here');
+		throw redirect(302, '/auth/login');
 	}
 	try {
-
 		const decoded = await jose.jwtVerify(jwt, new TextEncoder().encode(process.env['KEY']));
 
-        const username = decoded.payload.aud
+		const username = decoded.payload.aud;
 
-        const  prisma = new PrismaClient()
+		const prisma = new PrismaClient();
 
-        const pen_titles = await prisma.user.findUnique({
-            where: {
-                username: username
-            },
-            include: {
-                pens: {
-                    select: {
-                        title: true
-                    }
-                }
-            }
-        })
+		const pen_titles = await prisma.user.findUnique({
+			where: {
+				username: username
+			},
+			include: {
+				pens: {
+					select: {
+						title: true
+					}
+				}
+			}
+		});
 
 		return {
 			titles: pen_titles.pens
-		}
-
-        
+		};
 	} catch (error) {
-		console.log(error)
-        throw redirect(302, "/auth/login")
-    }
+		console.log(error);
+		throw redirect(302, '/auth/login');
+	}
 };
