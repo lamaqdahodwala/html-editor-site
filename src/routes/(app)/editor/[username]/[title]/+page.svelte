@@ -17,7 +17,11 @@
 		js = data.js;
 	});
 
-	console.log(data.is_owner);
+
+	function open_in_browser(){
+		let url = (window.location.href + "/view")
+		window.open(url, "_blank")
+	}
 
 	function save(html: string, css: string, js: string) {
 		let req = fetch(`/editor/${data.username}/${data.title}`, {
@@ -104,4 +108,4 @@
 		/>
 	</div>
 </div>
-<a href="{data.here + '/view'}">Open in browser</a>
+<button on:click={open_in_browser}>Open in browser</button>
