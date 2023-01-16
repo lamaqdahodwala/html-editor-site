@@ -73,6 +73,6 @@ export const actions: Actions = {
 			throw redirect(303, '/auth/login');
 		}
 
-		throw redirect(303, `/editor/${user.payload.aud}/${title}`);
+		throw redirect(303, `/editor/${user.payload.aud}/${kebabCase(title)}`);
 	}
 };
