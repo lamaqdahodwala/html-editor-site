@@ -21,12 +21,19 @@ export const actions: Actions = {
 		}
 		const prisma = new PrismaClient();
 
-		const user = await prisma.user.create({
-			data: {
-				username: username,
-				password: password
-			}
-		});
+		try {
+			const user = await prisma.user.create({
+				data: {
+					username: username,
+					password: password
+				}
+			});
+		} catch (error) {
+			return {
+				success: false,
+				error: 'The username is already taken'
+			};
+		}
 
 		prisma.$disconnect();
 		throw redirect(302, '/auth/login');
