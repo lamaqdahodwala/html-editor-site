@@ -105,6 +105,9 @@ export const load: PageServerLoad = async (event) => {
 				pens: {
 					select: {
 						title: true
+					},
+					orderBy: {
+						title: "asc"
 					}
 				}
 			}

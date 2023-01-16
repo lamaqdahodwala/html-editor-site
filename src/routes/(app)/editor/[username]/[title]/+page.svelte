@@ -109,3 +109,4 @@
 	</div>
 </div>
 <button on:click={open_in_browser}>Open in browser</button>
+<p><a href="/posts/create">Create post</a></p>
