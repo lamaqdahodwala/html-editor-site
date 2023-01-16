@@ -5,7 +5,7 @@ import type { PageServerLoad } from './$types';
 export const actions: Actions = {
 	default: async (event) => {
 		const jwt = event.cookies.get('jwt');
-		let decoded
+		let decoded;
 		try {
 			decoded = await jose.jwtVerify(jwt, new TextEncoder().encode(process.env['KEY']));
 		} catch (error) {
@@ -52,7 +52,7 @@ export const actions: Actions = {
 			throw error(403, 'Not authorized');
 		}
 
-		let post_id
+		let post_id;
 		try {
 			const post = await prisma.post.create({
 				data: {
@@ -71,7 +71,7 @@ export const actions: Actions = {
 				}
 			});
 
-			post_id = post.id
+			post_id = post.id;
 		} catch (error) {
 			return {
 				success: false,
@@ -79,9 +79,7 @@ export const actions: Actions = {
 			};
 		}
 
-		throw redirect(302, `/posts/post/${post_id}`)
-
-		
+		throw redirect(302, `/posts/post/${post_id}`);
 	}
 };
 export const load: PageServerLoad = async (event) => {
@@ -107,7 +105,7 @@ export const load: PageServerLoad = async (event) => {
 						title: true
 					},
 					orderBy: {
-						title: "asc"
+						title: 'asc'
 					}
 				}
 			}

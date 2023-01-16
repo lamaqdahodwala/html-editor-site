@@ -17,10 +17,9 @@
 		js = data.js;
 	});
 
-
-	function open_in_browser(){
-		let url = (window.location.href + "/view")
-		window.open(url, "_blank")
+	function open_in_browser() {
+		let url = window.location.href + '/view';
+		window.open(url, '_blank');
 	}
 
 	function save(html: string, css: string, js: string) {

@@ -47,8 +47,8 @@ export const load: PageServerLoad = async (event) => {
 
 		const pen = pen_data.pens[0];
 
-		let here = event.url
-		
+		const here = event.url;
+
 		return {
 			username: event.params.username,
 			title: event.params.title,

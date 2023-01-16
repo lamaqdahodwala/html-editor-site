@@ -1,36 +1,35 @@
-import { PrismaClient } from "@prisma/client";
-import type { PageServerLoad } from "./$types";
+import { PrismaClient } from '@prisma/client';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-    let id = event.params.id
+	const id = event.params.id;
 
-    let prisma = new PrismaClient()
+	const prisma = new PrismaClient();
 
-    let post = prisma.post.findUniqueOrThrow({
-        where: {
-            id: Number(id)
-        }, 
-        include: {
-            pen: {
-                select: {
-                    owner: {
-                        select: {
-                            username: true
-                        }
-                    },
-                    title: true
+	const post = prisma.post.findUniqueOrThrow({
+		where: {
+			id: Number(id)
+		},
+		include: {
+			pen: {
+				select: {
+					owner: {
+						select: {
+							username: true
+						}
+					},
+					title: true
+				}
+			},
+			owner: {
+				select: {
+					username: true
+				}
+			}
+		}
+	});
 
-                }
-            },
-            owner: {
-                select: {
-                    username: true
-                }
-            }
-        }
-    })
-
-    return {
-        post: post
-    }
+	return {
+		post: post
+	};
 };
