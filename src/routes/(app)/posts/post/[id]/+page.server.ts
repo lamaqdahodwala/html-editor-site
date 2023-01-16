@@ -23,7 +23,8 @@ export const load: PageServerLoad = async (event) => {
 			},
 			owner: {
 				select: {
-					username: true
+					username: true,
+					id: true
 				}
 			}
 		}

@@ -65,7 +65,8 @@
 		}
 	};
 </script>
-
+<p class="text-center text-blue-400"><a href="/users/{data.user_id}">{data.username}</a> <span class="text-black">| {data.title}</span></p>
+<br>
 <div class="grid grid-cols-3 gap-3">
 	<textarea
 		disabled={!data.is_owner}

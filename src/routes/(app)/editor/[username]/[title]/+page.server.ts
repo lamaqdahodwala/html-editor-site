@@ -51,6 +51,7 @@ export const load: PageServerLoad = async (event) => {
 
 		return {
 			username: event.params.username,
+			user_id: pen_data.id,
 			title: event.params.title,
 			html: pen.html,
 			css: pen.css,
