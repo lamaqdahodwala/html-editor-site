@@ -48,6 +48,6 @@
 			</div>
 		</div>
 	{:else}
-		<p>You have no pens</p>
+		<p>You have no pens. <a class="text-blue-400" href="/editor/create">Create something!</a></p>
 	{/if}
 {/if}

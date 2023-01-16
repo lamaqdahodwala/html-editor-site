@@ -1,0 +1,4 @@
+run = "npm run build && ORIGIN='https://HCJ.lamaqdahodwala.repl.co' node build"
+
+[nix]
+channel = "stable-22_11"
