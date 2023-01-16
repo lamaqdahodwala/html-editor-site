@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { redirect, type Actions } from '@sveltejs/kit';
 import * as jose from 'jose';
+import { kebabCase } from 'lodash'
 export const actions: Actions = {
 	default: async (event) => {
 		const data = event.request.formData();
@@ -57,7 +58,7 @@ export const actions: Actions = {
 
 			const pen = await prisma.pen.create({
 				data: {
-					title: title,
+					title: kebabCase(title),
 					owner: {
 						connect: {
 							username: user.payload.aud
