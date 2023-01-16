@@ -108,4 +108,6 @@
 	</div>
 </div>
 <button on:click={open_in_browser}>Open in browser</button>
-<p><a href="/posts/create">Create post</a></p>
+{#if data.is_owner}
+	<p><a href="/posts/create">Create post</a></p>
+{/if}
